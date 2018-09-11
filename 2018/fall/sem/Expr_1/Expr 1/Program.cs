@@ -10,11 +10,19 @@ namespace Expr_1
     {
         static void Main(string[] args)
         {
+            Console.Write("a=");
             var a = int.Parse(Console.ReadLine());
+            Console.Write("b=");
             var b = int.Parse(Console.ReadLine());
+            //Console.Write("a=");
+            //var a = int.Parse(Console.ReadLine());
+            //Console.Write("b=");
+            //var b = int.Parse(Console.ReadLine());
             //var c = a;
             //a = b;
             //b = c;
+            //Console.WriteLine("a=" + a);
+            //Console.WriteLine("b=" + b);
             if (a>b)
             {
                 a = a - b;
@@ -27,8 +35,8 @@ namespace Expr_1
                 a = b + a;
                 b = a - b;
             }
-            Console.WriteLine(a);
-            Console.WriteLine(b);
+            Console.WriteLine("a="+a);
+            Console.WriteLine("b="+b);
         }
     }
 }

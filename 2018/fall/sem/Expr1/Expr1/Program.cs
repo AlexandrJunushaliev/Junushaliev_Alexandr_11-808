@@ -10,6 +10,7 @@ namespace ConsoleApp10
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Еnter a three-digit number");
             //var a = Console.ReadLine();
             //string b = null;
             //for (var i = a.Length - 1; i >= 0; i--)
@@ -19,6 +20,7 @@ namespace ConsoleApp10
             var x1 = a / 100;
             var x3 = a % 10;
             var x2 = a - x1 * 100 - x3;
+            Console.WriteLine("Reverse number:");
             Console.WriteLine(x3*100+x2+x1);
         }
     }
