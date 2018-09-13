@@ -11,11 +11,11 @@ namespace Pecents
         static void Main(string[] args)
         {
             var enterData = Console.ReadLine();
-            var enterData1 = enterData.Split('.');
+            var enterData1 = enterData.Split(' ');
             var sum = double.Parse(enterData1[0]);
             var rate = double.Parse(enterData1[1]);
-            var time = double.Parse(enterData1[2]);
-            var answer = sum * Math.Pow((1 + rate / (12 * 100.00)), time);
+            var time = int.Parse(enterData1[2]);
+            var answer = sum * Math.Pow((1 + rate / 1200), time);
         }
     }
 }
