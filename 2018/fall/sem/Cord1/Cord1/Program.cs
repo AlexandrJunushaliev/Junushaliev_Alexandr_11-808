@@ -30,8 +30,6 @@ namespace Cord1
 
             if (dx == dy && dx == 1 || dx == 0 && dy == 1 || dy == 0 && dx == 1) Console.WriteLine("{0};{1} king {2}", from, to, true);
             else Console.WriteLine("{0};{1} king {2}", from, to, false);//Король
-
-
         }
     }
 }
