@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*Задача Cond3 
+ *Автор Александр Джунушалиев 11-808
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
