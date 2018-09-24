@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*Задача Cond6
+ *Автор Александр Джунушалиев 11-808
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,10 +25,12 @@ namespace Cord6
             var y1 = double.Parse(data2[1]);
             var x2 = double.Parse(data3[0]);
             var y2 = double.Parse(data3[1]);
+            //Вычисление длин сторон треугольника АВС
             var l1 = Math.Sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
             var l2 = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
             var d = Math.Sqrt((x2 - x0) * (x2 - x0) + (y2 - y0) * (y2 - y0));
-            if (d*d-2*l1*l1<0.000001 && l1== l2)
+            //По теореме, обратной теореме Пифагора, если квадрат гипотенузы равен сумме квадратов катетов, то треугольник прямоугольный. Если катеты равны, то, вкупе с предыдущим условием, точки А, В и С являются вершинами квадрата
+            if (d*d-2*l1*l1<0.000001 && l1 - l2 < 0.000001)
             {
                 Console.WriteLine("Entered points is the verticles of a square");
                 var x3 = (x2 + x0) / 2;
