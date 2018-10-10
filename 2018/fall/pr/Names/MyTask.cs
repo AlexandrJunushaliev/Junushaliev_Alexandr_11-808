@@ -20,7 +20,7 @@ namespace Names
                     else daysInMonthes = daysInMonthes + 30;
                 }
             int days = int.Parse(data[0].ToString() + data[1].ToString());
-            if (days == 27 && month == 2) days = 27;
+            if (days == 28 && month == 2) days = 27;
             return daysInMonthes + days;
         }
 
