@@ -11,16 +11,17 @@ namespace Names
         {
             int daysInMonthes = 0;
             int month = int.Parse(data[3].ToString() + data[4].ToString());
+            //Расчет количества дней, которое прошло от начала года начала данного месяца, если прошел хотя бы 1 месяц
             if (month > 1)
                 for (int j = 1; j <= month - 1; j++)
                 {
-                    if (j == 2) daysInMonthes = daysInMonthes + 27;
+                    if (j == 2) daysInMonthes = daysInMonthes + 27;//если месяц февраль, то +27 дней
                     else
-                    if ((j % 2 == 1) || (j == 8)) daysInMonthes = daysInMonthes + 31;
-                    else daysInMonthes = daysInMonthes + 30;
+                    if ((j % 2 == 1) || (j == 8)) daysInMonthes = daysInMonthes + 31;//если месяц нечетный или август, то +31 день
+                    else daysInMonthes = daysInMonthes + 30; //иначе +30
                 }
             int days = int.Parse(data[0].ToString() + data[1].ToString());
-            if (days == 28 && month == 2) days = 27;
+            if (days == 28 && month == 2) days = 27;//Если дата 28 февраля, то считаем ее как 27, так как это не является важным из-за того, что нет периодов знаков зодиака, как-либо меняющихся от високосныъ лет, нет
             return daysInMonthes + days;
         }
 
