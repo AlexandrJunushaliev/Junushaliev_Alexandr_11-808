@@ -16,6 +16,115 @@ namespace GameOf15
         private int countSteps=0;
         private Timer timer1;
         private DateTime dateTime;
+        private Dictionary<int, int[,]> reRoll()//метод расставляющий пятнашки
+        {
+            var buttonsLocations = Filler();//заполнение словаря с позициями кнопок
+            buttonsLocations = MixPos(buttonsLocations);//получение случайной перестановки
+            button1.Location = new System.Drawing.Point(buttonsLocations[1][0, 0], buttonsLocations[1][0, 1]);
+            button2.Location = new System.Drawing.Point(buttonsLocations[2][0, 0], buttonsLocations[2][0, 1]);
+            button3.Location = new System.Drawing.Point(buttonsLocations[3][0, 0], buttonsLocations[3][0, 1]);
+            button4.Location = new System.Drawing.Point(buttonsLocations[4][0, 0], buttonsLocations[4][0, 1]);
+            button5.Location = new System.Drawing.Point(buttonsLocations[5][0, 0], buttonsLocations[5][0, 1]);
+            button6.Location = new System.Drawing.Point(buttonsLocations[6][0, 0], buttonsLocations[6][0, 1]);
+            button7.Location = new System.Drawing.Point(buttonsLocations[7][0, 0], buttonsLocations[7][0, 1]);
+            button8.Location = new System.Drawing.Point(buttonsLocations[8][0, 0], buttonsLocations[8][0, 1]);
+            button9.Location = new System.Drawing.Point(buttonsLocations[9][0, 0], buttonsLocations[9][0, 1]);
+            button10.Location = new System.Drawing.Point(buttonsLocations[10][0, 0], buttonsLocations[10][0, 1]);
+            button11.Location = new System.Drawing.Point(buttonsLocations[11][0, 0], buttonsLocations[11][0, 1]);
+            button12.Location = new System.Drawing.Point(buttonsLocations[12][0, 0], buttonsLocations[12][0, 1]);
+            button13.Location = new System.Drawing.Point(buttonsLocations[13][0, 0], buttonsLocations[13][0, 1]);
+            button14.Location = new System.Drawing.Point(buttonsLocations[14][0, 0], buttonsLocations[14][0, 1]);
+            button15.Location = new System.Drawing.Point(buttonsLocations[15][0, 0], buttonsLocations[15][0, 1]);
+            button16.Location = new System.Drawing.Point(buttonsLocations[16][0, 0], buttonsLocations[16][0, 1]);
+            return buttonsLocations;
+        }
+        private static Dictionary<int, int[,]> Filler()
+        {
+            Dictionary<int, int[,]> ArrayOfLocations = new Dictionary<int, int[,]>();
+            var k = 1;
+            for (var i = 0; i < 148; i += 49)
+            {
+                for (var j = 0; j < 148; j += 49)
+                {
+                    if (!ArrayOfLocations.ContainsKey(k)) ArrayOfLocations.Add(k, new int[,] { { i, j } });
+                    else ArrayOfLocations[k] = new int[,] { { i, j } };
+                    k++;
+                }
+            }
+            return ArrayOfLocations;
+        }
+        private static Dictionary<int, int[,]> MixPos(Dictionary<int, int[,]> buttonsLocations)
+        {
+            var solved = false;
+            var mixLocations = new Dictionary<int, int[,]>(buttonsLocations);
+            while (!solved)
+            {
+
+                var usedKeys = new int[16];
+                var rand = new Random();
+                foreach (var location in buttonsLocations.Keys)
+                {
+                    bool exit = true;
+                    var key = 0;
+                    while (exit)
+                    {
+                        bool repeat = false;
+                        key = rand.Next(1, 17);
+                        for (var i = 0; i < 16; i++)
+                        {
+                            if (usedKeys[i] == key) repeat = true;
+                        }
+                        if (repeat == false)
+                        {
+                            usedKeys[location - 1] = key;
+                            mixLocations[key] = buttonsLocations[location];
+                            exit = false;
+                        }
+                    }
+                }
+
+                var linedKeysArray = new int[16];
+                var k = 0;
+                for (var i = 0; i < 4; i++)
+                {
+                    for (var j = 0; j < 16; j += 4)
+                    {
+                        linedKeysArray[k] = usedKeys[j + i];
+                        k++;
+                    }
+                }
+                solved = IsSolved(linedKeysArray);
+            }
+
+
+
+            return mixLocations;
+        }
+        private static bool IsSolved(int[] linedkeysArray)
+        {
+            var nIArray = new int[16];
+            var summ = 0;
+            var numberOfLineOfEmpty = -1;
+            for (var i = 0; i < 16; i++)
+            {
+                if (linedkeysArray[i] == 16)
+                {
+                    numberOfLineOfEmpty = i / 4 + 1;
+                    continue;
+                }
+                for (var j = i + 1; j < 16; j++)
+                {
+                    if (linedkeysArray[j] == 16) { continue; }
+                    if (linedkeysArray[i] > linedkeysArray[j])
+                        nIArray[i]++;
+                }
+            }
+            foreach (var e in nIArray)
+            {
+                summ += e;
+            }
+            return (summ + numberOfLineOfEmpty) % 2 == 1 ? false : true;
+        }
         public GameOf15()
         {
             MessageBox.Show(this, "После нажатия кнопки ОК игра начнется и включится секундомер.",
@@ -33,13 +142,11 @@ namespace GameOf15
             timer1.Interval = 20;//20 мс между тиками
             timer1.Tick += new EventHandler(Time); //подсчет на каждый тик     
         }
-
         private void Time(object sender, EventArgs e)//подсчет прошедшего с начала времени
         {
             var totalTime = (DateTime.Now - dateTime).TotalSeconds;
             label1.Text = $"{(int)totalTime/60}:{(totalTime%60):0.###}";
         }
-
         private void EndChecker()//Метод, проверяющий, собраны ли пятнашки
         {
             var end = true;
@@ -327,7 +434,6 @@ namespace GameOf15
             }
 
         }
-
         private void button17_Click(object sender, EventArgs e)//кнопка рестарта
         {
             ButtonPositions = reRoll();
@@ -335,6 +441,5 @@ namespace GameOf15
             countSteps = 0;
             label3.Text = "0";
         }
-
     }
 }
