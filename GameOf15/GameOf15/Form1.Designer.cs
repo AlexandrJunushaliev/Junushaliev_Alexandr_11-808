@@ -332,7 +332,7 @@ namespace GameOf15
         }
 
         #endregion
-        public Dictionary<int, int[,]> reRoll()//метод расставляющий пятнашки
+        private Dictionary<int, int[,]> reRoll()//метод расставляющий пятнашки
         {
             var buttonsLocations = Filler();//заполнение словаря с позициями кнопок
             buttonsLocations = MixPos(buttonsLocations);//получение случайной перестановки
@@ -354,7 +354,7 @@ namespace GameOf15
             button16.Location = new System.Drawing.Point(buttonsLocations[16][0, 0], buttonsLocations[16][0, 1]);
             return buttonsLocations;
         }
-        public static Dictionary<int, int[,]> Filler()
+        private static Dictionary<int, int[,]> Filler()
         {
             Dictionary<int, int[,]> ArrayOfLocations = new Dictionary<int, int[,]>();
             var k = 1;
@@ -369,7 +369,7 @@ namespace GameOf15
             }
             return ArrayOfLocations;
         }
-        public static Dictionary<int, int[,]> MixPos(Dictionary<int, int[,]> buttonsLocations)
+        private static Dictionary<int, int[,]> MixPos(Dictionary<int, int[,]> buttonsLocations)
         {
             var solved = false;
             var mixLocations = new Dictionary<int, int[,]>(buttonsLocations);
