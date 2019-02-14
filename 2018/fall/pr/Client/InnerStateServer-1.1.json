@@ -1,0 +1,21 @@
+{
+  "remoteServerList": [],
+  "oldServer": [
+    {
+      "minVersion": "1.8",
+      "ignoreVersions": [],
+      "includeVersions": [],
+      "removedTime": [],
+      "recoveryServerTime": 12,
+      "maxRemovingCountServer": 2,
+      "addedDate": "Dec 8, 2018 12:47:17 AM",
+      "name": "DexLand.ru",
+      "address": "mc.dexland.ru:25565",
+      "hideAddress": true,
+      "acceptTextures": 1
+    }
+  ],
+  "userServer": [],
+  "serverDatFile": [],
+  "pageServerList": []
+}

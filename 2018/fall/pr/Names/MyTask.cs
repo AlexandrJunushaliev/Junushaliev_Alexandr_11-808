@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 namespace Names
-{  
+{
     public class MyTask
     {
         public static int DaysOfZodiacFromStartOfTheYear(string data)
@@ -12,14 +12,13 @@ namespace Names
             int daysInMonthes = 0;
             int month = int.Parse(data[3].ToString() + data[4].ToString());
             //Расчет количества дней, которое прошло от начала года начала данного месяца, если прошел хотя бы 1 месяц
-            if (month > 1)
-                for (int j = 1; j <= month - 1; j++)
-                {
-                    if (j == 2) daysInMonthes = daysInMonthes + 27;//если месяц февраль, то +27 дней
-                    else
-                    if ((j % 2 == 1) || (j == 8)) daysInMonthes = daysInMonthes + 31;//если месяц нечетный или август, то +31 день
-                    else daysInMonthes = daysInMonthes + 30; //иначе +30
-                }
+            for (int j = 1; j <= month - 1; j++)
+            {
+                if (j == 2) daysInMonthes = daysInMonthes + 27;//если месяц февраль, то +27 дней
+                else
+                if ((j % 2 == 1) || (j == 8)) daysInMonthes = daysInMonthes + 31;//если месяц нечетный или август, то +31 день
+                else daysInMonthes = daysInMonthes + 30; //иначе +30
+            }
             int days = int.Parse(data[0].ToString() + data[1].ToString());
             if (days == 28 && month == 2) days = 27;//Если дата 28 февраля, то считаем ее как 27, так как это не является важным из-за того, что нет периодов знаков зодиака, как-либо меняющихся от високосныъ лет, нет
             return daysInMonthes + days;
@@ -37,7 +36,7 @@ namespace Names
                 "Virgo♍",
                 "Libra♎",
                 "Scorpio♏",
-                "Sagittarius♐ ",
+                "Sagittarius♐",
                 "Capricorn♑",
                 "Aquarius♒",
                 "Pisces♓"
@@ -46,7 +45,7 @@ namespace Names
             //Массив дат окончаний каждого из периодов знаков зодиака
             string[] datasOfEndingOfZodiac = new string[] { "20.04", "21.05", "21.06", "22.07", "21.08", "23.09", "23.10", "22.11", "22.12", "20.01", "19.02", "20.03" };
             //Лист с количествами дней, прошедших с начала года до дат окончаний 
-            List<int> zodiac= new List<int>();
+            List<int> zodiac = new List<int>();
             for (int i = 0; i < 12; i++)
             {
                 zodiac.Add(DaysOfZodiacFromStartOfTheYear(datasOfEndingOfZodiac[i]));
@@ -54,16 +53,16 @@ namespace Names
             //Отсортированный в порядке возрастания лист zodiac
             List<int> sortedList = zodiac;
             sortedList.Sort();
-    
+
             double[] y = new double[12];
-           
+
             //проходка от 1 до последней строки
             for (int i = 0; i < names.Length; i++)
             {
                 //выделение из строки даты
                 string[] data = names[i].ToString().Split(' ');
                 string dayAndMonth = "";
-                for (int j =0;j<5;j++)
+                for (int j = 0; j < 5; j++)
                 {
                     dayAndMonth = dayAndMonth + data[0][j].ToString();
                 }
@@ -82,7 +81,7 @@ namespace Names
                 //Восстановления соответствия с правильным порядком и увеличение числа людей с данным знаком
                 for (int j = 0; j < 12; j++)
                     if (needEndByDateOfBorn == zodiac[j]) y[j]++;
-            }          
+            }
             return new HistogramData(string.Format("Распределение людей по знакам зодиака"), x, y);
         }
     }

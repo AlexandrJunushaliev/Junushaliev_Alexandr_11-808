@@ -17,7 +17,7 @@ namespace Cond7
             double x = double.Parse(data[0]);
             double y = double.Parse(data[1]);
             double n = double.Parse(data[2]);
-            int ans = 1;
+            double ans = 1;
             //если х<=y, то в голосовании нет необходимости, так как условие задачи достигнуто
             if (x <= y) Console.WriteLine('0');
             else
@@ -28,15 +28,14 @@ namespace Cond7
                 if (x != 10.0)
                 {
                     X = (int)((x + 0.04999999999) * n);
-                    while (X / n >= x + 0.049999999999) X--;
+      
                 }
                 else
                 {
                     X = (int)(x * n);
-                }
-                ans = (int)((y * n - X) / (1 - y - 0.05));
-                while (((ans + X) / (ans + n)) < y + 0.04999999999) ans--;
-                Console.WriteLine(ans + 1); //First way, with cycles
+                }   
+                ans = (int)(((y + 0.0499999999) * n - X) / (1 - y - 0.0499999999));
+                Console.WriteLine(ans+1); //First way, with cycles
             }
             //if (y >= x)
             //{

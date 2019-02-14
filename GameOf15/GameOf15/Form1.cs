@@ -127,6 +127,7 @@ namespace GameOf15
         }
         public GameOf15()
         {
+            
             MessageBox.Show(this, "После нажатия кнопки ОК игра начнется и включится секундомер.",
                                    "Предупреждение.", MessageBoxButtons.OK,
                                    MessageBoxIcon.Warning,
