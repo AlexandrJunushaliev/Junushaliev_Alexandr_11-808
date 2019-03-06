@@ -11,17 +11,15 @@ namespace TestGeneratorForGraham
     {
         static void Main(string[] args)
         {
-            var dataSetstsNumber = new Random();
-            var amountOfData = new Random();
-            var value = new Random();
-            var sign = new Random();
+            var value = new Random();//рандом для значения
+            var sign = new Random();//рандом для знака
             string docPath =
-                  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Data");
-            for (var i = 1; i < 101; i++)
+                  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Data");//путь до файлов данных
+            for (var i = 1; i < 101; i++)//создает сто наборов файлов
             {
                 using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, $"DataSet{i}.txt")))
                 {
-                    for (var j = 0; j < i * 100; j++)
+                    for (var j = 0; j < i * 100; j++)//от 100 до 10000 элементов в файле
                     {
                         var currentSignForX = Math.Pow(-1, sign.Next(0, 2));
                         var X = value.Next(0, 256);
@@ -32,7 +30,6 @@ namespace TestGeneratorForGraham
                     }
                 }
             }
-
         }
     }
 }
