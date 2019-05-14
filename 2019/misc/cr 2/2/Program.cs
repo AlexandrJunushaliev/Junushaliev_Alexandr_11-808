@@ -24,25 +24,25 @@ namespace ConsoleApp43
             var url = string.Format("https://jsonplaceholder.typicode.com/comments");
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
-            Task<string> answer = null;
+            string answer = null;
             using (Stream s = response.GetResponseStream())
             {
                 using (StreamReader reader = new StreamReader(s))
                 {
-                    answer = reader.ReadToEndAsync();
+                    answer = reader.ReadToEnd();
                 }
             }
-            var a = answer.Result;
-            var comments = JsonConvert.DeserializeObject<Comment[]>(a);
+
+            var comments = JsonConvert.DeserializeObject<Comment[]>(answer);
             var needComments = comments.Where(v => v.Id % 2 == 0);
             Count(needComments);
-            
+
         }
         static void Count(IEnumerable<Comment> needComments)
         {
             foreach (var comment in needComments)
             {
-                Console.WriteLine(comment.Body.Length);
+                Console.WriteLine(comment.Body.Where(v => char.IsLetter(v)).Count());
             }
         }
     }
