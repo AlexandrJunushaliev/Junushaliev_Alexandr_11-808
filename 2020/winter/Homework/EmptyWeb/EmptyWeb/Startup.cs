@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmptyWeb.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,36 +11,42 @@ using Microsoft.Extensions.Hosting;
 
 namespace EmptyWeb
 {
-	public class Startup
-	{
-		// This method gets called by the runtime. Use this method to add services to the container.
-		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddTransient<IMessageSender, EmailMessageSender>();
-		}
+    public class Startup
+    {
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient<IMessageSender, EmailMessageSender>();
+            services.AddTransient<Storage<Blog>, BlogCsvStorage>();
+            services.AddTransient<Storage<Commentary>, CommentariesCsvStorage>();
+        }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Storage<Blog> blogStorage,
+            Storage<Commentary> commentaryStorage)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-			app.UseRouting();
+            app.UseRouting();
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapGet("/", new HomeController().GetForm);
-				endpoints.MapGet("/Posts", new HomeController().GetPosts);
-				endpoints.MapGet("/Posts/DeletePost", new HomeController().DeletePost);
-				endpoints.MapGet("/Posts/OpenPost", new HomeController().OpenPost);
-				endpoints.MapGet("/Files/{FileName}", new HomeController().FileProvider);
-				endpoints.MapPost("/Home/AddEntry", new HomeController().AddEntry);
-				endpoints.MapPost("/Posts/rewritePost", new HomeController().RewritePost);
-			});
-			
-		}
-	}
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/Blogs/WriteBlog", new BlogsController(blogStorage).GetForm);
+                endpoints.MapGet("/Blogs/OpenBlog/", new BlogsController(blogStorage).OpenBlog);
+                endpoints.MapPost("/Blogs/SaveBlog", new BlogsController(blogStorage).SaveBlog);
+                endpoints.MapPost("/Blogs/rewriteBlog", new BlogsController(blogStorage).RewriteBlog);
+                endpoints.MapGet("/Blogs/", new BlogsController(blogStorage).GetBlogs);
+                endpoints.MapGet("/Blogs/deleteBlog", new BlogsController(blogStorage).DeleteBlog);
+                endpoints.MapGet("/Files/{FileName}", new FilesController().FileProvider);
+                endpoints.MapPost("/Commentaries/SaveCommentary",
+                    new CommentaryController(commentaryStorage).SaveCommentary);
+                endpoints.MapGet("/Commentaries/DeleteCommentary",
+                    new CommentaryController(commentaryStorage).DeleteCommentary);
+            });
+        }
+    }
 }
