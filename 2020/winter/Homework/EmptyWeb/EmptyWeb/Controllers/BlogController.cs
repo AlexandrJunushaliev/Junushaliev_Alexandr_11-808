@@ -64,7 +64,6 @@ namespace EmptyWeb
                     <textarea name = ""text"" ></textarea >
                     <br/> 
                     <input value = ""Подтвердить"" type = ""submit""/>"
-                    
                 );
 
 
@@ -77,31 +76,46 @@ namespace EmptyWeb
 
         public async Task SaveBlog(HttpContext context)
         {
-            string filePath = "Files";
-            foreach (var formFile in context.Request.Form.Files)
-            {
-                if (formFile.Length <= 0) continue;
-                string newFile = Path.Combine(filePath, formFile.FileName);
-                using (var inputStream = new FileStream(newFile, FileMode.Create))
-                {
-                    // read file to stream
-                    await formFile.CopyToAsync(inputStream);
-                    // stream to byte array
-                    byte[] array = new byte[inputStream.Length];
-                    inputStream.Seek(0, SeekOrigin.Begin);
-                    inputStream.Read(array, 0, array.Length);
-                }
-            }
-
             Blog blog = new Blog();
             blog.Guid = Guid.NewGuid().ToString();
             blog.Name = context.Request.Form["name"];
             blog.Text = context.Request.Form["text"];
             blog.DateTime = DateTime.Now;
             blog.FileName = context.Request.Form.Files.FirstOrDefault()?.FileName;
-            storage.Save(blog);
+            var validRes = Validation.Validate(blog);
+            if (validRes.Any(x => !x.IsValid))
+            {
+                var sb = new StringBuilder($"Errors list:{Environment.NewLine}");
+                foreach (var fieldValidRes in validRes)
+                {
+                    sb.Append($"{fieldValidRes.ErrMsg}{Environment.NewLine}");
+                }
 
-            await context.Response.WriteAsync("New Entry was added");
+                await context.Response.WriteAsync(sb.ToString());
+            }
+            else
+            {
+                string filePath = "Files";
+                foreach (var formFile in context.Request.Form.Files)
+                {
+                    if (formFile.Length <= 0) continue;
+                    string newFile = Path.Combine(filePath, formFile.FileName);
+                    using (var inputStream = new FileStream(newFile, FileMode.Create))
+                    {
+                        // read file to stream
+                        await formFile.CopyToAsync(inputStream);
+                        // stream to byte array
+                        byte[] array = new byte[inputStream.Length];
+                        inputStream.Seek(0, SeekOrigin.Begin);
+                        inputStream.Read(array, 0, array.Length);
+                    }
+                }
+
+
+                storage.Save(blog);
+
+                await context.Response.WriteAsync("New Entry was added");
+            }
         }
 
         public async Task GetBlogs(HttpContext context)
@@ -125,29 +139,44 @@ namespace EmptyWeb
             if (query.Keys.Contains("blogGuid"))
             {
                 var blogGuid = query["blogGuid"];
-                string filePath = "Files";
-                foreach (var formFile in context.Request.Form.Files)
-                {
-                    if (formFile.Length <= 0) continue;
-                    string newFile = Path.Combine(filePath, formFile.FileName);
-                    using (var inputStream = new FileStream(newFile, FileMode.Create))
-                    {
-                        // read file to stream
-                        await formFile.CopyToAsync(inputStream);
-                        // stream to byte array
-                        byte[] array = new byte[inputStream.Length];
-                        inputStream.Seek(0, SeekOrigin.Begin);
-                        inputStream.Read(array, 0, array.Length);
-                    }
-                }
-
                 Blog blog = storage.Items.FirstOrDefault(x => x.Guid == blogGuid);
                 blog.Name = context.Request.Form["name"];
                 blog.Text = context.Request.Form["text"];
                 blog.FileName = context.Request.Form.Files.FirstOrDefault()?.FileName ?? blog.FileName;
-                storage.Update(blog, blog);
+                var validRes = Validation.Validate(blog);
+                if (validRes.Any(x => !x.IsValid))
+                {
+                    var sb = new StringBuilder($"Errors list:{Environment.NewLine}");
+                    foreach (var fieldValidRes in validRes)
+                    {
+                        sb.Append($"{fieldValidRes.ErrMsg}{Environment.NewLine}");
+                    }
 
-                await context.Response.WriteAsync("Entry was updated");
+                    await context.Response.WriteAsync(sb.ToString());
+                }
+                else
+                {
+                    string filePath = "Files";
+                    foreach (var formFile in context.Request.Form.Files)
+                    {
+                        if (formFile.Length <= 0) continue;
+                        string newFile = Path.Combine(filePath, formFile.FileName);
+                        using (var inputStream = new FileStream(newFile, FileMode.Create))
+                        {
+                            // read file to stream
+                            await formFile.CopyToAsync(inputStream);
+                            // stream to byte array
+                            byte[] array = new byte[inputStream.Length];
+                            inputStream.Seek(0, SeekOrigin.Begin);
+                            inputStream.Read(array, 0, array.Length);
+                        }
+                    }
+
+
+                    storage.Update(blog, blog);
+
+                    await context.Response.WriteAsync("Entry was updated");
+                }
             }
         }
     }

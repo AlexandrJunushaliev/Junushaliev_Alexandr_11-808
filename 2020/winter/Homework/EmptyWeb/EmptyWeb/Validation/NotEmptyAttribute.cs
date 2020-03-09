@@ -9,10 +9,7 @@ namespace EmptyWeb
     {
         public override bool IsValid(object value)
         {
-            if (value != null && value.ToString() != "")
-                return true;
-
-            return false;
+            return value != null && value.ToString() != "";
         }
     }
 }

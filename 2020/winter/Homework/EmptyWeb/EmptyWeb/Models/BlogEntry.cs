@@ -8,7 +8,7 @@ namespace EmptyWeb.Models
     public class Blog
     {
         public string Guid { get; set; }
-        [NotEmpty] public string Name { get; set; }
+        [NotEmpty] [BlogName] public string Name { get; set; }
 
         [NotEmpty] public string Text { get; set; }
 

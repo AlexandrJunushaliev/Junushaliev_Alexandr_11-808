@@ -9,13 +9,29 @@ namespace EmptyWeb
 {
 	public class Validation
 	{
-		public ValidationResult Validate(object obj)
+		public static List<ValidationResult> Validate(object obj)
 		{
 			// здесь пробежать по всем полям модели с использованием рефлексии
 			// и если они имеют атрибут потомок ValidationAttribute
 			// вызвать соответствующий метод IsValid
+			var type = obj.GetType();
+			var props = type.GetProperties();
+			var results = new List<ValidationResult>();
+			foreach (var prop in props)
+			{
+				var valAttributes = prop.GetCustomAttributes<ValidationAttribute>();
+				if (valAttributes.Any(attribute => !attribute.IsValid(prop.GetValue(obj))))
+				{
+					results.Add(new ValidationResult(false,
+						$"Property {prop.Name} doesn't have a valid value. Try something else."));
+				}
+				else
+				{
+					results.Add(new ValidationResult(true));
+				}
+			}
 
-			return new ValidationResult(true);
+			return results;
 		}
 	}
 }

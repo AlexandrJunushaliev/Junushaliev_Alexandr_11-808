@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EmptyWeb
 {
-	public abstract class ValidationAttribute : System.Attribute
+	public abstract class ValidationAttribute : Attribute
 	{
 		public string ErrorMessage { get; set; }
 		public abstract bool IsValid(object value);
