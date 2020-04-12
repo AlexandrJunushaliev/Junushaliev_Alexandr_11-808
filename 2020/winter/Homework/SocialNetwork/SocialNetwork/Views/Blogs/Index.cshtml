@@ -1,0 +1,37 @@
+﻿@model List<Blog>
+
+
+@{
+    ViewData["Title"] = "Blogs";
+}
+
+<div>
+    <a href="/Blogs/CreateBlog">Добавить блог</a>
+    <hr/>
+    @foreach (var blog in Model)
+    {
+        <a href="/Blogs/UpdateBlog?blogId=@blog.Id">Изменить блог</a>
+        <a href="/Blogs/DeleteBlog?blogId=@blog.Id">Удалить блог</a>
+        <text>@blog.BlogName</text>
+        <br/>
+        <text>@blog.DateTime</text>
+        <br/>
+        <textarea>@blog.Text</textarea>
+        <hr/>
+        <text>Комментарии:</text>
+        <br/>
+        <a href="/Commentaries/CreateCommentary?blogId=@blog.Id">Добавить комментарий</a>
+        <br/>
+        @foreach (var comm in blog.Commentaries)
+        {
+            <a href="/Commentaries/UpdateCommentary?commentaryId=@comm.Id">Изменить комментарий</a>
+            <a href="/Commentaries/DeleteCommentary?commentaryId=@comm.Id">Удалить комментарий</a>
+            <text>@comm.UserName</text>
+            <br/>
+            <text>@comm.DateTime</text>
+            <br/>
+            <text>@comm.Text</text>
+            <hr/>
+        }
+    }
+</div>
