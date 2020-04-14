@@ -6,24 +6,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SocialNetwork.MessageSenders;
 using SocialNetwork.Models;
 
 namespace SocialNetwork.Controllers
 {
     public class CommentariesController : Controller
     {
-        private ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly UserManager<User> _userManager;
         private readonly IAuthorizationService _authorizationService;
+        private IMessageSender _messageSender;
         private const string pathToBlogs = "/Blogs";
         private const string pathToHome = "/";
 
         public CommentariesController(ApplicationContext dbContext, UserManager<User> userManager,
-            IAuthorizationService service)
+            IAuthorizationService service, IMessageSender messageSender)
         {
             _context = dbContext;
             _userManager = userManager;
             _authorizationService = service;
+            _messageSender = messageSender;
         }
 
         [Authorize]
@@ -52,6 +55,7 @@ namespace SocialNetwork.Controllers
             };
             _context.Commentaries.Add(commentary);
             _context.SaveChanges();
+            _messageSender.Send(_messageSender.GetType().ToString());
             return Redirect(pathToBlogs);
         }
 
@@ -63,6 +67,7 @@ namespace SocialNetwork.Controllers
             {
                 return Redirect(pathToHome);
             }
+
             var timeCheck = await _authorizationService.AuthorizeAsync(User, commentary, "CommentEditTime");
             if (timeCheck.Succeeded)
             {
@@ -72,8 +77,6 @@ namespace SocialNetwork.Controllers
             }
 
             return Redirect(pathToHome);
-
-
         }
 
         [Authorize]
@@ -81,13 +84,13 @@ namespace SocialNetwork.Controllers
         public IActionResult UpdateCommentary(CommentaryViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            
+
             var commentary = _context.Commentaries.Include(x => x.User).FirstOrDefault(x => x.Id == model.CommentaryId);
             if (commentary == null || User.Identity.Name != commentary.User.UserName)
             {
                 return Redirect(pathToHome);
             }
-            
+
 
             commentary.Text = model.Text;
             _context.SaveChanges();

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SocialNetwork.MessageSenders;
 using SocialNetwork.Models;
 using SocialNetwork.Policy;
 
@@ -34,6 +35,15 @@ namespace SocialNetwork
                     policy.Requirements.Add(new TimeAccessRequirement()));
             });
             services.AddSingleton<IAuthorizationHandler, CommentAuthorizationHandler>();
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                services.AddSingleton<IMessageSender, SmsMessageSender>();
+            }
+            else
+            {
+                services.AddSingleton<IMessageSender, EmailMessageSender>();
+            }
+            
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>()
