@@ -14,16 +14,16 @@ namespace SocialNetwork.Controllers
     {
         private ApplicationContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly IAuthorizationService _authorizationService;
         private const string pathToBlogs = "/Blogs";
         private const string pathToHome = "/";
 
         public CommentariesController(ApplicationContext dbContext, UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            IAuthorizationService service)
         {
             _context = dbContext;
             _userManager = userManager;
-            _signInManager = signInManager;
+            _authorizationService = service;
         }
 
         [Authorize]
@@ -56,17 +56,24 @@ namespace SocialNetwork.Controllers
         }
 
         [Authorize]
-        public IActionResult UpdateCommentary(int commentaryId)
+        public async Task<IActionResult> UpdateCommentary(int commentaryId)
         {
-            var commentary = _context.Commentaries.Include(x=>x.User).FirstOrDefault(x => x.Id == commentaryId);
+            var commentary = _context.Commentaries.Include(x => x.User).FirstOrDefault(x => x.Id == commentaryId);
             if (commentary == null || User.Identity.Name != commentary.User.UserName)
             {
                 return Redirect(pathToHome);
             }
+            var timeCheck = await _authorizationService.AuthorizeAsync(User, commentary, "CommentEditTime");
+            if (timeCheck.Succeeded)
+            {
+                var model = new CommentaryViewModel()
+                    {BlogId = commentary.BlogId, Text = commentary.Text};
+                return View(model);
+            }
 
-            var model = new CommentaryViewModel()
-                {BlogId = commentary.BlogId, Text = commentary.Text};
-            return View(model);
+            return Redirect(pathToHome);
+
+
         }
 
         [Authorize]
@@ -74,11 +81,13 @@ namespace SocialNetwork.Controllers
         public IActionResult UpdateCommentary(CommentaryViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var commentary = _context.Commentaries.Include(x=>x.User).FirstOrDefault(x => x.Id == model.CommentaryId);
+            
+            var commentary = _context.Commentaries.Include(x => x.User).FirstOrDefault(x => x.Id == model.CommentaryId);
             if (commentary == null || User.Identity.Name != commentary.User.UserName)
             {
                 return Redirect(pathToHome);
             }
+            
 
             commentary.Text = model.Text;
             _context.SaveChanges();
@@ -88,7 +97,7 @@ namespace SocialNetwork.Controllers
         [Authorize]
         public IActionResult DeleteCommentary(int commentaryId)
         {
-            var commentary = _context.Commentaries.Include(x=>x.User).FirstOrDefault(x => x.Id == commentaryId);
+            var commentary = _context.Commentaries.Include(x => x.User).FirstOrDefault(x => x.Id == commentaryId);
             if (commentary == null || User.Identity.Name != commentary.User.UserName)
             {
                 return Redirect(pathToBlogs);

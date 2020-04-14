@@ -61,7 +61,7 @@ namespace SocialNetwork.Controllers
                 await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
-                HttpContext.Response.Cookies.Append("Role", model.Email == "admin@mail.ru" ? "Admin" : "User");
+                HttpContext.Response.Cookies.Append("Role", model.Email == "admin@mail.ru" ? "Admin" : "User");    
                 // проверяем, принадлежит ли URL приложению
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
@@ -80,7 +80,6 @@ namespace SocialNetwork.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Response.Cookies.Delete("Role");
-            // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

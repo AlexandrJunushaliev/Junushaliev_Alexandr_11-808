@@ -9,8 +9,7 @@ namespace SocialNetwork.Filters
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var isAdmin = context.HttpContext.Request.Cookies["Role"];
-            if (isAdmin != "Admin")
+            if (!context.HttpContext.Request.Cookies.ContainsKey("Role") || context.HttpContext.Request.Cookies["Role"] != "Admin")
                 context.Result = new RedirectToActionResult("Index", "Home", null);
             base.OnActionExecuting(context);
         }

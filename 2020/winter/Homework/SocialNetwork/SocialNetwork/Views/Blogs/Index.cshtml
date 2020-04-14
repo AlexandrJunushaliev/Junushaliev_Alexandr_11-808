@@ -9,15 +9,19 @@
     @if (User.Identity.Name != null)
     {
         <a href="/Blogs/CreateBlog">Добавить блог</a>
+        <hr/>
     }
-    
-    <hr/>
+
+
     @foreach (var blog in Model)
     {
         <text>@blog.BlogName</text>
-        if (User.Identity.Name == blog.User.UserName)
+        if (User.Identity.Name == blog.User.UserName || Context.Request.Cookies.ContainsKey("Role") && Context.Request.Cookies["Role"] == "Admin")
         {
             <a href="/Blogs/UpdateBlog?blogId=@blog.Id">Изменить блог</a>
+        }
+        if (Context.Request.Cookies.ContainsKey("Role") && Context.Request.Cookies["Role"] == "Admin")
+        {
             <a href="/Blogs/DeleteBlog?blogId=@blog.Id">Удалить блог</a>
         }
         <br/>
@@ -31,7 +35,7 @@
         {
             <a href="/Commentaries/CreateCommentary?blogId=@blog.Id">Добавить комментарий</a>
         }
-        
+
         <br/>
         @foreach (var comm in blog.Commentaries)
         {
@@ -39,13 +43,13 @@
             if (User.Identity.Name == comm.User.UserName)
             {
                 <a href="/Commentaries/UpdateCommentary?commentaryId=@comm.Id">Изменить комментарий</a>
-                <a href="/Commentaries/DeleteCommentary?commentaryId=@comm.Id">Удалить комментарий</a>    
+                <a href="/Commentaries/DeleteCommentary?commentaryId=@comm.Id">Удалить комментарий</a>
             }
             <br/>
             <text>@comm.DateTime</text>
             <br/>
             <text>@comm.Text</text>
+            <hr/>
         }
-        <hr/>
     }
 </div>
