@@ -6,13 +6,20 @@
 }
 
 <div>
-    <a href="/Blogs/CreateBlog">Добавить блог</a>
+    @if (User.Identity.Name != null)
+    {
+        <a href="/Blogs/CreateBlog">Добавить блог</a>
+    }
+    
     <hr/>
     @foreach (var blog in Model)
     {
-        <a href="/Blogs/UpdateBlog?blogId=@blog.Id">Изменить блог</a>
-        <a href="/Blogs/DeleteBlog?blogId=@blog.Id">Удалить блог</a>
         <text>@blog.BlogName</text>
+        if (User.Identity.Name == blog.User.UserName)
+        {
+            <a href="/Blogs/UpdateBlog?blogId=@blog.Id">Изменить блог</a>
+            <a href="/Blogs/DeleteBlog?blogId=@blog.Id">Удалить блог</a>
+        }
         <br/>
         <text>@blog.DateTime</text>
         <br/>
@@ -20,18 +27,25 @@
         <hr/>
         <text>Комментарии:</text>
         <br/>
-        <a href="/Commentaries/CreateCommentary?blogId=@blog.Id">Добавить комментарий</a>
+        @if (User.Identity.Name != null)
+        {
+            <a href="/Commentaries/CreateCommentary?blogId=@blog.Id">Добавить комментарий</a>
+        }
+        
         <br/>
         @foreach (var comm in blog.Commentaries)
         {
-            <a href="/Commentaries/UpdateCommentary?commentaryId=@comm.Id">Изменить комментарий</a>
-            <a href="/Commentaries/DeleteCommentary?commentaryId=@comm.Id">Удалить комментарий</a>
-            <text>@comm.UserName</text>
+            <text>@comm.User.UserName</text>
+            if (User.Identity.Name == comm.User.UserName)
+            {
+                <a href="/Commentaries/UpdateCommentary?commentaryId=@comm.Id">Изменить комментарий</a>
+                <a href="/Commentaries/DeleteCommentary?commentaryId=@comm.Id">Удалить комментарий</a>    
+            }
             <br/>
             <text>@comm.DateTime</text>
             <br/>
             <text>@comm.Text</text>
-            <hr/>
         }
+        <hr/>
     }
 </div>

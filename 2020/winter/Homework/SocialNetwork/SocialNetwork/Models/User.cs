@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace SocialNetwork.Models
 {
-    public class User
+    public class User:IdentityUser
     {
-        [Key]
-        public string Username { get; set; }
-        //no hash, no salt
-        public string Password { get; set; }
+        public string Role { get; set; }
+        public List<Commentary> Commentaries { get; set; }
+        public List<Blog> Blogs { get; set; }
     }
 }

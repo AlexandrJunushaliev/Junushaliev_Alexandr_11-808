@@ -1,22 +1,18 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialNetwork.Models
 {
-    public class ApplicationContext:DbContext
+    public class ApplicationContext:IdentityDbContext<User>
     {
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Commentary> Commentaries { get; set; }     
-        public DbSet<User> Users { get; set; }
-        public ApplicationContext()
+        public DbSet<Commentary> Commentaries { get; set; }    
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        : base(options)
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();
-        }
-         
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=socialNetworkDb1;Username=postgres;Password=password");
         }
     }
 }

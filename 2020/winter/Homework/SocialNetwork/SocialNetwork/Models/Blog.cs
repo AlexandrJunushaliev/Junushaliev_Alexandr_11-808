@@ -11,5 +11,6 @@ namespace SocialNetwork.Models
         public string FilePath { get; set; }
         public DateTime DateTime { get; set; }
         public List<Commentary> Commentaries { get; set; }
+        public User User { get; set; }
     }
 }

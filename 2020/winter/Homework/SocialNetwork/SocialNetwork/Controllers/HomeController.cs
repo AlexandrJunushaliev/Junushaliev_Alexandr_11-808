@@ -4,20 +4,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SocialNetwork.Authorization;
 using SocialNetwork.Models;
 
 namespace SocialNetwork.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -25,7 +29,6 @@ namespace SocialNetwork.Controllers
             return View();
         }
 
-        [AuthorizationRequired]
         public IActionResult Privacy()
         {
             return View();
